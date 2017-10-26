@@ -1,4 +1,15 @@
 <?php
+require_once '../vendor/autoload.php';
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+$logger = new Logger('LineBot');
+$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
+
+$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV["egQa5x0UdLUqsow7a/d53vRdVsB0q48+tYde+a46llCx6qY4dm2LMs3AfY5zIOXiqJaFpezfa79yM2DqWOQ86D1sUoDBLMjsqDPsbXHiumQYAYiM6lVlM/oiUNaYHuSZWUdPH0iqywbYQOncNkHG+gdB04t89/1O/w1cDnyilFU="]);
+$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV["66a2cdad886545de59f7fbc74577b661"]]);
+
+$signature = $_SERVER['HTTP_' . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 $strAccessToken = "egQa5x0UdLUqsow7a/d53vRdVsB0q48+tYde+a46llCx6qY4dm2LMs3AfY5zIOXiqJaFpezfa79yM2DqWOQ86D1sUoDBLMjsqDPsbXHiumQYAYiM6lVlM/oiUNaYHuSZWUdPH0iqywbYQOncNkHG+gdB04t89/1O/w1cDnyilFU=";
  
 $content = file_get_contents('php://input');
@@ -27,6 +38,7 @@ if($arrJson['events'][0]['message']['text'] == "สวัสดี"){
 }else if($arrJson['events'][0]['message']['text'] == "มีเมนูอะไรบ้าง"){
     $img_url = "https://cdn.shopify.com/s/files/1/0379/7669/products/sampleset2_1024x1024.JPG?v=1458740363";
     $outputText = new LINE\LINEBot\MessageBuilder\ImageMessageBuilder($img_url, $img_url);
+    $response = $bot->replyMessage($event->getReplyToken(), $outputText);
 }else{
   $arrPostData = array();
   $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
